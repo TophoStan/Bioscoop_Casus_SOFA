@@ -9,6 +9,8 @@ public class Order
     private bool IsStudentOrder { get; set; }
     private List<MovieTicket> Tickets { get; set; } = new List<MovieTicket>();
 
+    private const int DISCOUNT_GROUP_6 = 0.9;
+
     public Order(int orderNr, bool isStudentOrder)
     {
         OrderNr = orderNr;
@@ -36,14 +38,7 @@ public class Order
             for (int i = 0; i < freeTickets; i++)
             {
                 MovieTicket ticket = Tickets[i];
-                if (ticket.isPremiumTicket())
-                {
-                    totalPrice += ticket.getPricePerSeat() + 2;
-                }
-                else
-                {
-                    totalPrice += ticket.getPricePerSeat();
-                }
+                AddTicketPriceToTotalPrice(ticket, ref totalPrice, 2);
             }
         }
         else
@@ -55,14 +50,7 @@ public class Order
                 for (int i = 0; i < freeTickets; i++)
                 {
                     MovieTicket ticket = Tickets[i];
-                    if (ticket.isPremiumTicket())
-                    {
-                        totalPrice += ticket.getPricePerSeat() + 3;
-                    }
-                    else
-                    {
-                        totalPrice += ticket.getPricePerSeat();
-                    }
+                    AddTicketPriceToTotalPrice(ticket, ref totalPrice, 3);
                 }
             }
             else
@@ -70,20 +58,13 @@ public class Order
                 for (int i = 0; i < Tickets.Count; i++)
                 {
                     MovieTicket ticket = Tickets[i];
-                    if (ticket.isPremiumTicket())
-                    {
-                        totalPrice += ticket.getPricePerSeat() + 3;
-                    }
-                    else
-                    {
-                        totalPrice += ticket.getPricePerSeat();
-                    }
+                    AddTicketPriceToTotalPrice(ticket, ref totalPrice, 3);
                 }
 
 
                 if (Tickets.Count >= 6)
                 {
-                    totalPrice *= 0.9;
+                    totalPrice *= DISCOUNT_GROUP_6;
                 }
             }
         }
@@ -91,6 +72,17 @@ public class Order
         return totalPrice;
     }
 
+    private void AddTicketPriceToTotalPrice(MovieTicket ticket, ref double totalPrice, double premiumSeatPrice)
+    {
+        if (ticket.isPremiumTicket())
+        {
+            totalPrice += ticket.getPricePerSeat() + premiumSeatPrice;
+        }
+        else
+        {
+            totalPrice += ticket.getPricePerSeat();
+        }
+    }
 
     public void export(TicketExportFormat format)
     {
@@ -125,8 +117,7 @@ public class Order
 
             foreach (MovieTicket ticket in Tickets)
             {
-                writer.WriteLine($"- Movie: {ticket.getMovieScreening().getMovie().getTitle()}");
-                writer.WriteLine($"  Date and Time: {ticket.getMovieScreening().getDateAndTime()}");
+                writer.WriteLine($"  Date and Time: {ticket.getMovieScreening().ToString()}");
                 writer.WriteLine($"  Seat: Row{ticket.getRowNr()}, Seat{ticket.getSeatNr()}");
                 writer.WriteLine();
             }
@@ -150,8 +141,7 @@ public class Order
             {
                 MovieTicket ticket = Tickets[i];
                 writer.WriteLine("    {");
-                writer.WriteLine($"      \"Movie\": \"{ticket.getMovieScreening().getMovie().getTitle()}\",");
-                writer.WriteLine($"      \"DateAndTime\": \"{ticket.getMovieScreening().getDateAndTime()}\",");
+                writer.WriteLine($"      \"DateAndTime\": \"{ticket.ToString()}\",");
                 writer.WriteLine($"      \"Seat\": \"{ticket.getSeatNr()}\",");
                 writer.WriteLine($"      \"Price\": {ticket.getPricePerSeat()}");
                 writer.WriteLine("    }" + (i < Tickets.Count - 1 ? "," : ""));

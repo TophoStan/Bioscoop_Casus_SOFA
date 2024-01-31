@@ -23,13 +23,9 @@ public class MovieScreening
         return PricePerSeat;
     }
 
-    public DateTime getDateAndTime()
-    {
-        return DateAndTime;
-    }
 
     public override string ToString()
     {
-        return base.ToString();
+        return "Screening: " + Movie.ToString() + "\n" + DateAndTime + " " + PricePerSeat + " euro";
     }
 }
