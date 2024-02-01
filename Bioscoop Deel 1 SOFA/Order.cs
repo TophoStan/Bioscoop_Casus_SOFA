@@ -144,7 +144,7 @@ public class Order
                 MovieTicket ticket = Tickets[i];
                 writer.WriteLine("    {");
                 writer.WriteLine($"      \"Date and time\": \"{ticket.GetMovieScreening().getDateAndTime()}\",");
-                writer.WriteLine($"      \"Seat\": \"{ticket.GetSeatNr()}\",");
+                writer.WriteLine($"      \"Seat\": \"{ticket.GetSeatNr()}\"");
                 writer.WriteLine("    }" + (i < Tickets.Count - 1 ? "," : ""));
             }
 
