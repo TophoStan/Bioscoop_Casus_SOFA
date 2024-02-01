@@ -9,7 +9,7 @@ public class Order
     private bool IsStudentOrder { get; set; }
     private List<MovieTicket> Tickets { get; set; } = new List<MovieTicket>();
 
-    private const int DISCOUNT_GROUP_6 = 0.9;
+    private const double DISCOUNT_GROUP_6 = 0.9;
 
     public Order(int orderNr, bool isStudentOrder)
     {
@@ -34,16 +34,17 @@ public class Order
         if (IsStudentOrder)
         {
             int freeTickets = Tickets.Count / 2;
-
             for (int i = 0; i < freeTickets; i++)
             {
                 MovieTicket ticket = Tickets[i];
+                Console.WriteLine(ticket.GetPricePerSeat());
                 AddTicketPriceToTotalPrice(ticket, ref totalPrice, 2);
+                
             }
         }
         else
         {
-            DateTime day = Tickets.Single().getMovieScreening().getDateAndTime();
+            DateTime day = Tickets.Single().GetMovieScreening().getDateAndTime();
             if (day.DayOfWeek == DayOfWeek.Monday || day.DayOfWeek == DayOfWeek.Tuesday || day.DayOfWeek == DayOfWeek.Wednesday || day.DayOfWeek == DayOfWeek.Thursday)
             {
                 int freeTickets = Tickets.Count / 2;
@@ -74,17 +75,17 @@ public class Order
 
     private void AddTicketPriceToTotalPrice(MovieTicket ticket, ref double totalPrice, double premiumSeatPrice)
     {
-        if (ticket.isPremiumTicket())
+        if (ticket.IsPremiumTicket())
         {
-            totalPrice += ticket.getPricePerSeat() + premiumSeatPrice;
+            totalPrice += ticket.GetPricePerSeat(premiumSeatPrice);
         }
         else
         {
-            totalPrice += ticket.getPricePerSeat();
+            totalPrice += ticket.GetPricePerSeat();
         }
     }
 
-    public void export(TicketExportFormat format)
+    public void Export(TicketExportFormat format)
     {
         switch (format)
         {
@@ -108,17 +109,17 @@ public class Order
         File.Create($"C:/dev/{fileName}").Close();
             
 
-        using (StreamWriter writer = new StreamWriter($"C:/dev/{fileName}", true))
+        using (StreamWriter writer = new ($"C:/dev/{fileName}", true))
         {
             writer.WriteLine($"Order Number: {OrderNr}");
             writer.WriteLine($"Is Student Order: {IsStudentOrder}");
             writer.WriteLine("Tickets:");
-            writer.WriteLine($"Price: {calculatePrice()}");
+            writer.WriteLine($"Price total: {calculatePrice()}");
 
             foreach (MovieTicket ticket in Tickets)
             {
-                writer.WriteLine($"  Date and Time: {ticket.getMovieScreening().ToString()}");
-                writer.WriteLine($"  Seat: Row{ticket.getRowNr()}, Seat{ticket.getSeatNr()}");
+                writer.WriteLine($"  Date and Time: {ticket.GetMovieScreening().getDateAndTime()}");
+                writer.WriteLine($"  Seat: Row{ticket.GetRowNr()}, Seat{ticket.GetSeatNr()}");
                 writer.WriteLine();
             }
 
@@ -130,10 +131,11 @@ public class Order
 
         string fileName = $"Order_{OrderNr}.json";
         File.Create($"C:/dev/{fileName}").Close();
-        using (StreamWriter writer = new StreamWriter($"C:/dev/{fileName}", true))
+        using (StreamWriter writer = new ($"C:/dev/{fileName}", true))
         {
             writer.WriteLine("{");
             writer.WriteLine($"  \"OrderNr\": {OrderNr},");
+            writer.WriteLine($"  \"Price total\": {calculatePrice()},");
             writer.WriteLine($"  \"IsStudentOrder\": {IsStudentOrder.ToString().ToLower()},");
             writer.WriteLine("  \"Tickets\": [");
 
@@ -141,9 +143,8 @@ public class Order
             {
                 MovieTicket ticket = Tickets[i];
                 writer.WriteLine("    {");
-                writer.WriteLine($"      \"DateAndTime\": \"{ticket.ToString()}\",");
-                writer.WriteLine($"      \"Seat\": \"{ticket.getSeatNr()}\",");
-                writer.WriteLine($"      \"Price\": {ticket.getPricePerSeat()}");
+                writer.WriteLine($"      \"Date and time\": \"{ticket.GetMovieScreening().getDateAndTime()}\",");
+                writer.WriteLine($"      \"Seat\": \"{ticket.GetSeatNr()}\",");
                 writer.WriteLine("    }" + (i < Tickets.Count - 1 ? "," : ""));
             }
 

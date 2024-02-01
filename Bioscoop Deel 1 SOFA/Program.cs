@@ -18,9 +18,9 @@ class Program
         order.addSeatReservation(movieTicket3);
         order.addSeatReservation(movieTicket4);
         Console.WriteLine(order.calculatePrice());
-        order.export(TicketExportFormat.PLAINTEXT);
+        order.Export(TicketExportFormat.PLAINTEXT);
 
-        order.export(TicketExportFormat.JSON);
+        order.Export(TicketExportFormat.JSON);
 
     }
 }

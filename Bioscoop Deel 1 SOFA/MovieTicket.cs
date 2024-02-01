@@ -17,38 +17,38 @@ public class MovieTicket
         this.IsPremium = isPremium;
     }
 
-    public int getRowNr()
+    public int GetRowNr()
     {
         return RowNr;
     }
 
-    public int getSeatNr()
+    public int GetSeatNr()
     {
         return SeatNr;
     }
 
-    public bool isPremiumTicket()
+    public bool IsPremiumTicket()
     {
         return IsPremium;
     }
 
-    public double getPricePerSeat()
+    public double GetPricePerSeat(double premiumSeatPrice = 0)
     {
-        if (isPremiumTicket())
+        if (IsPremiumTicket())
         {
-            return Screening.getPricePerSeat() + 2;
+            return Screening.getPricePerSeat() + premiumSeatPrice;
         }
         return Screening.getPricePerSeat() ;
     }
 
-    public MovieScreening getMovieScreening()
+    public MovieScreening GetMovieScreening()
      {
         return Screening;
     }
 
     public override string ToString()
     {
-        return base.ToString();
+        return base.ToString()!;
     }
 
 }

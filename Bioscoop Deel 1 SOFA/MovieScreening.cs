@@ -1,4 +1,6 @@
-﻿namespace Bioscoop_Deel_1_SOFA;
+﻿using Microsoft.VisualBasic;
+
+namespace Bioscoop_Deel_1_SOFA;
 
 public class MovieScreening
 {
@@ -23,6 +25,11 @@ public class MovieScreening
         return PricePerSeat;
     }
 
+
+    public DateTime getDateAndTime()
+    {
+        return DateAndTime;
+    }
 
     public override string ToString()
     {
