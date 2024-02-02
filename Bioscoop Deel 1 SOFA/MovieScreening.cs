@@ -5,10 +5,10 @@ namespace Bioscoop_Deel_1_SOFA;
 public class MovieScreening
 {
     private DateTime DateAndTime { get; set; }
-    private double PricePerSeat { get; set; }
+    private decimal PricePerSeat { get; set; }
     private Movie Movie { get; set; }
 
-    public MovieScreening(Movie movie, DateTime dateAndTime, double pricePerSeat)
+    public MovieScreening(Movie movie, DateTime dateAndTime, decimal pricePerSeat)
     {
         Movie = movie;
         DateAndTime = dateAndTime;
@@ -20,7 +20,7 @@ public class MovieScreening
         return Movie;
     }
 
-    public double getPricePerSeat()
+    public decimal getPricePerSeat()
     {
         return PricePerSeat;
     }

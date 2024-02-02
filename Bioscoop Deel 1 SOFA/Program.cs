@@ -6,7 +6,7 @@ class Program
     static void Main(string[] args)
     {
         Movie movie = new("The Matrix");
-        MovieScreening movieScreening = new(movie, DateTime.Now, 10.0);
+        MovieScreening movieScreening = new(movie, DateTime.Now, 10);
         MovieTicket movieTicket1 = new(movieScreening, 1, 2, false);
         MovieTicket movieTicket2 = new(movieScreening, 1, 3, true);
         MovieTicket movieTicket3 = new(movieScreening, 1, 4, false);

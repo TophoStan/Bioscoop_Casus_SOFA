@@ -32,12 +32,8 @@ public class MovieTicket
         return IsPremium;
     }
 
-    public double GetPricePerSeat(double premiumSeatPrice = 0)
+    public decimal GetPricePerSeat()
     {
-        if (IsPremiumTicket())
-        {
-            return Screening.getPricePerSeat() + premiumSeatPrice;
-        }
         return Screening.getPricePerSeat() ;
     }
 

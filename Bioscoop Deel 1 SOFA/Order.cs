@@ -4,12 +4,11 @@ namespace Bioscoop_Deel_1_SOFA;
 
 public class Order
 {
-
     private int OrderNr { get; set; }
     private bool IsStudentOrder { get; set; }
     private List<MovieTicket> Tickets { get; set; } = new List<MovieTicket>();
 
-    private const double DISCOUNT_GROUP_6 = 0.9;
+    private const decimal DISCOUNT_GROUP_6 = 0.9m;
 
     public Order(int orderNr, bool isStudentOrder)
     {
@@ -27,62 +26,65 @@ public class Order
         Tickets.Add(ticket);
     }
 
-    public double calculatePrice()
+    public decimal calculatePrice()
     {
-        double totalPrice = 0;
+        decimal totalPrice = decimal.Zero;
+        bool canHaveDiscount = Tickets.Count >= 6;
 
-        if (IsStudentOrder)
-        {
-            int freeTickets = Tickets.Count / 2;
-            for (int i = 0; i < freeTickets; i++)
-            {
-                MovieTicket ticket = Tickets[i];
-                Console.WriteLine(ticket.GetPricePerSeat());
-                AddTicketPriceToTotalPrice(ticket, ref totalPrice, 2);
+        DateTime day = Tickets.Single().GetMovieScreening().getDateAndTime() ;
+        bool isWeekday = day.DayOfWeek == DayOfWeek.Monday || day.DayOfWeek == DayOfWeek.Tuesday || day.DayOfWeek == DayOfWeek.Wednesday || day.DayOfWeek == DayOfWeek.Thursday;
                 
-            }
-        }
-        else
+        
+
+        for (int i = 0; i < Tickets.Count; i++)
         {
-            DateTime day = Tickets.Single().GetMovieScreening().getDateAndTime();
-            if (day.DayOfWeek == DayOfWeek.Monday || day.DayOfWeek == DayOfWeek.Tuesday || day.DayOfWeek == DayOfWeek.Wednesday || day.DayOfWeek == DayOfWeek.Thursday)
+            MovieTicket ticket = Tickets[i];
+            // Is een student
+            if(IsStudentOrder)
             {
-                int freeTickets = Tickets.Count / 2;
-                for (int i = 0; i < freeTickets; i++)
+                //Is 2e kaartje
+                if(!(i + 1 % 2 == 0))
                 {
-                    MovieTicket ticket = Tickets[i];
-                    AddTicketPriceToTotalPrice(ticket, ref totalPrice, 3);
-                }
-            }
+                    if (ticket.IsPremiumTicket()) totalPrice += 2;
+                    totalPrice += ticket.GetPricePerSeat();
+                } 
+            } 
+            // Iedereen behalve student
             else
             {
-                for (int i = 0; i < Tickets.Count; i++)
+                // Iedereen In het weekend
+                if(!isWeekday)
                 {
-                    MovieTicket ticket = Tickets[i];
-                    AddTicketPriceToTotalPrice(ticket, ref totalPrice, 3);
-                }
 
-
-                if (Tickets.Count >= 6)
+                    if (ticket.IsPremiumTicket()) totalPrice += 3;
+                    totalPrice += ticket.GetPricePerSeat();
+                    // Groep is groter dan 6
+                    if (canHaveDiscount) totalPrice *= DISCOUNT_GROUP_6;
+                } 
+                // Iedereen buiten het weekend
+                else
                 {
-                    totalPrice *= DISCOUNT_GROUP_6;
+                    if(!(i + 1 % 2 == 0))
+                    {
+                        if (ticket.IsPremiumTicket()) totalPrice += 3;
+                        totalPrice += ticket.GetPricePerSeat();
+                    }
                 }
             }
         }
-
         return totalPrice;
+
+
     }
 
-    private void AddTicketPriceToTotalPrice(MovieTicket ticket, ref double totalPrice, double premiumSeatPrice)
+    private void AddTicketPriceToTotalPrice(MovieTicket ticket, ref decimal totalPrice, decimal premiumSeatPrice)
     {
+        //D
         if (ticket.IsPremiumTicket())
         {
-            totalPrice += ticket.GetPricePerSeat(premiumSeatPrice);
+            totalPrice += premiumSeatPrice;
         }
-        else
-        {
-            totalPrice += ticket.GetPricePerSeat();
-        }
+        totalPrice += ticket.GetPricePerSeat();
     }
 
     public void Export(TicketExportFormat format)
