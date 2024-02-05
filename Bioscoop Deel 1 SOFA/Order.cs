@@ -31,40 +31,45 @@ public class Order
         decimal totalPrice = decimal.Zero;
         bool canHaveDiscount = Tickets.Count >= 6;
 
-        DateTime day = Tickets.Single().GetMovieScreening().getDateAndTime() ;
-        bool isWeekday = day.DayOfWeek == DayOfWeek.Monday || day.DayOfWeek == DayOfWeek.Tuesday || day.DayOfWeek == DayOfWeek.Wednesday || day.DayOfWeek == DayOfWeek.Thursday;
+        DateTime day = Tickets.First().GetMovieScreening().getDateAndTime();
+        bool isWeekday = (day.DayOfWeek == DayOfWeek.Monday || day.DayOfWeek == DayOfWeek.Tuesday || day.DayOfWeek == DayOfWeek.Wednesday || day.DayOfWeek == DayOfWeek.Thursday);
                 
         
+
 
         for (int i = 0; i < Tickets.Count; i++)
         {
             MovieTicket ticket = Tickets[i];
-            // Is een student
+            // A- Is een student
             if(IsStudentOrder)
             {
-                //Is 2e kaartje
-                if(!(i + 1 % 2 == 0))
+                //B- Is 2e kaartje
+                if(!((i + 1) % 2 == 0))
                 {
+                    //C - Is een premium kaart
                     if (ticket.IsPremiumTicket()) totalPrice += 2;
                     totalPrice += ticket.GetPricePerSeat();
                 } 
             } 
-            // Iedereen behalve student
+            // D- Iedereen behalve student
             else
             {
-                // Iedereen In het weekend
+                // F- Iedereen In het weekend
                 if(!isWeekday)
                 {
-
+                    //G - is een premium kaart
                     if (ticket.IsPremiumTicket()) totalPrice += 3;
+                    
+
                     totalPrice += ticket.GetPricePerSeat();
-                    // Groep is groter dan 6
+                    //H - Groep is groter dan 6
                     if (canHaveDiscount) totalPrice *= DISCOUNT_GROUP_6;
                 } 
-                // Iedereen buiten het weekend
-                else
+                // E- Iedereen buiten het weekend
+                else 
                 {
-                    if(!(i + 1 % 2 == 0))
+                    // H- Is 2e kaartje
+                    if (!((i + 1) % 2 == 0))
                     {
                         if (ticket.IsPremiumTicket()) totalPrice += 3;
                         totalPrice += ticket.GetPricePerSeat();
@@ -73,8 +78,6 @@ public class Order
             }
         }
         return totalPrice;
-
-
     }
 
     private void AddTicketPriceToTotalPrice(MovieTicket ticket, ref decimal totalPrice, decimal premiumSeatPrice)
