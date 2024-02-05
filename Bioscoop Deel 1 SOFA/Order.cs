@@ -82,15 +82,6 @@ public class Order
         return totalPrice;
     }
 
-    private void AddTicketPriceToTotalPrice(MovieTicket ticket, ref decimal totalPrice, decimal premiumSeatPrice)
-    {
-        //D
-        if (ticket.IsPremiumTicket())
-        {
-            totalPrice += premiumSeatPrice;
-        }
-        totalPrice += ticket.GetPricePerSeat();
-    }
 
     public void Export(TicketExportFormat format)
     {
