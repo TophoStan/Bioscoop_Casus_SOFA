@@ -13,11 +13,7 @@ namespace Cinema_test
             Order order = new(1, true);
             order.addSeatReservation(movieTicket1);
             order.addSeatReservation(movieTicket2);
-
-
             decimal result = order.calculatePrice();
-
-
             Assert.Equal(10, result);
         }
         //1,2,5,6
@@ -49,7 +45,6 @@ namespace Cinema_test
         [Fact]
         public void IsNotAStudentAndWithinTheWeekendThatIsPremiumAndGroupIsNotBiggerThan6ShouldEqual()
         {
-
             DateTime monday = new DateTime(2024, 2, 5);
             Movie movie = new("The matrix");
             MovieScreening movieScreening = new(movie, monday, 10);
@@ -60,7 +55,50 @@ namespace Cinema_test
             Assert.Equal(13, result);
         }
 
-    }
+        //1,3,9,14,16
+        [Fact]
+        public void IsNotAStudentAndNotInTheWeekendHasSecondTicketAndIsPremiumTicketThan13ShouldEqual()
+        {
+            DateTime monday = new DateTime(2024, 2, 5);
+            Movie movie = new("The matrix");
+            MovieScreening movieScreening = new(movie, monday, 10);
+            MovieTicket movieTicket1 = new(movieScreening, 1, 2, true);
+            MovieTicket movieTicket2 = new(movieScreening, 1, 2, true);
+            Order order = new(1, false);
+            order.addSeatReservation(movieTicket1);
+            order.addSeatReservation(movieTicket2);
+            decimal result = order.calculatePrice();
+            Assert.Equal(13, result);
+        }
 
-    #if(true && (false || false))
+        //1,3,9,14,17
+        [Fact]
+        public void IsNotAStudentAndNotInTheWeekendHasSecondTicketAndIsNotPremiumTicketThan10ShouldEqual()
+        {
+            DateTime monday = new DateTime(2024, 2, 5);
+            Movie movie = new("The matrix");
+            MovieScreening movieScreening = new(movie, monday, 10);
+            MovieTicket movieTicket1 = new(movieScreening, 1, 2, false);
+            MovieTicket movieTicket2 = new(movieScreening, 1, 2, false);
+            Order order = new(1, false);
+            order.addSeatReservation(movieTicket1);
+            order.addSeatReservation(movieTicket2);
+            decimal result = order.calculatePrice();
+            Assert.Equal(10, result);
+        }   
+
+        //1,3,9,15
+        [Fact]
+        public void IsNotAStudentAndNotInTheWeekendHasNotSecondTicketThan10ShouldEqual()
+        {
+            DateTime monday = new DateTime(2024, 2, 5);
+            Movie movie = new("The matrix");
+            MovieScreening movieScreening = new(movie, monday, 10);
+            MovieTicket movieTicket1 = new(movieScreening, 1, 2, false);
+            Order order = new(1, false);
+            order.addSeatReservation(movieTicket1);
+            decimal result = order.calculatePrice();
+            Assert.Equal(10, result);
+        }
+    }
 }
