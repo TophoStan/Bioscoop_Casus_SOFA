@@ -62,8 +62,6 @@ public class Order
                     
 
                     totalPrice += ticket.GetPricePerSeat();
-                    //H - Groep is groter dan 6
-                    if (canHaveDiscount) totalPrice *= DISCOUNT_GROUP_6;
                 } 
                 // E- Iedereen buiten het weekend
                 else 
@@ -77,6 +75,10 @@ public class Order
                 }
             }
         }
+
+        //H - Groep is groter dan 6
+        if (canHaveDiscount && !isWeekday && !IsStudentOrder) totalPrice *= DISCOUNT_GROUP_6;
+
         return totalPrice;
     }
 

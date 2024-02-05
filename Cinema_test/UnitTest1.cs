@@ -41,7 +41,7 @@ namespace Cinema_test
             Assert.Equal(12, result);
         }
 
-        //1,3,8,11,13
+        //1,3,8,11,12
         [Fact]
         public void IsNotAStudentAndWithinTheWeekendThatIsPremiumAndGroupIsNotBiggerThan6ShouldEqual()
         {
@@ -53,6 +53,25 @@ namespace Cinema_test
             order.addSeatReservation(movieTicket1);
             decimal result = order.calculatePrice();
             Assert.Equal(13, result);
+        }
+
+        //1,3,8,11,13
+        [Fact]
+        public void IsNotAStudentAndWithinTheWeekendThatIsPremiumAndGroupIsBiggerThan39ShouldEqual()
+        {
+            DateTime sunday = new DateTime(2024, 2, 4);
+            Movie movie = new("The matrix");
+            MovieScreening movieScreening = new(movie, sunday, 10);
+            MovieTicket movieTicket1 = new(movieScreening, 1, 2, true);
+            Order order = new(1, false);
+            order.addSeatReservation(movieTicket1);
+            order.addSeatReservation(movieTicket1);
+            order.addSeatReservation(movieTicket1);
+            order.addSeatReservation(movieTicket1);
+            order.addSeatReservation(movieTicket1);
+            order.addSeatReservation(movieTicket1);
+            decimal result = order.calculatePrice();
+            Assert.Equal(70.2m, result);
         }
 
         //1,3,9,14,16
