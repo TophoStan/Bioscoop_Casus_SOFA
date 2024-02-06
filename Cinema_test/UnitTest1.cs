@@ -159,6 +159,21 @@ namespace Cinema_test
             Assert.Contains("\"OrderNr\": 1", result);
         }
 
+        [Fact]
+        public void getTitleFromMovie()
+        {
+            Movie movie = new("The matrix");
+
+            Assert.Equal("The matrix", movie.getTitle());
+        }
+        [Fact]
+        public void toStringFromMovie()
+        {
+            Movie movie = new("The matrix");
+
+            Assert.Equal("Titlename: The matrix", movie.ToString());
+        }
+
 
     }
 }

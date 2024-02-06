@@ -10,11 +10,6 @@ public class Movie
         Title = title;
     }
 
-    public void addScreening(MovieScreening screening)
-    {
-
-    }
-
     public string getTitle()
     {
         return Title;
