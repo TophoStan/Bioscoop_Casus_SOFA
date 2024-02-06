@@ -8,7 +8,6 @@ public class Order
     private bool IsStudentOrder { get; set; }
     private List<MovieTicket> Tickets { get; set; } = new List<MovieTicket>();
 
-    private const decimal DISCOUNT_GROUP_6 = 0.9m;
 
     public Order(int orderNr, bool isStudentOrder)
     {
@@ -26,7 +25,7 @@ public class Order
         Tickets.Add(ticket);
     }
 
-    public decimal calculatePrice()
+    public decimal CalculatePrice()
     {
         decimal totalPrice = decimal.Zero;
         bool canHaveDiscount = Tickets.Count >= 6;
@@ -77,7 +76,7 @@ public class Order
         }
 
         //H - Groep is groter dan 6
-        if (canHaveDiscount && !isWeekday && !IsStudentOrder) totalPrice *= DISCOUNT_GROUP_6;
+        if (canHaveDiscount && !isWeekday && !IsStudentOrder) totalPrice *= 0.9m;
 
         return totalPrice;
     }
@@ -112,7 +111,7 @@ public class Order
             writer.WriteLine($"Order Number: {OrderNr}");
             writer.WriteLine($"Is Student Order: {IsStudentOrder}");
             writer.WriteLine("Tickets:");
-            writer.WriteLine($"Price total: {calculatePrice()}");
+            writer.WriteLine($"Price total: {CalculatePrice()}");
 
             foreach (MovieTicket ticket in Tickets)
             {
@@ -133,7 +132,7 @@ public class Order
         {
             writer.WriteLine("{");
             writer.WriteLine($"  \"OrderNr\": {OrderNr},");
-            writer.WriteLine($"  \"Price total\": {calculatePrice()},");
+            writer.WriteLine($"  \"Price total\": {CalculatePrice()},");
             writer.WriteLine($"  \"IsStudentOrder\": {IsStudentOrder.ToString().ToLower()},");
             writer.WriteLine("  \"Tickets\": [");
 

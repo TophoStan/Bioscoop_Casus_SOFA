@@ -13,7 +13,7 @@ namespace Cinema_test
             Order order = new(1, true);
             order.addSeatReservation(movieTicket1);
             order.addSeatReservation(movieTicket2);
-            decimal result = order.calculatePrice();
+            decimal result = order.CalculatePrice();
             Assert.Equal(10, result);
         }
         //1,2,5,6
@@ -25,7 +25,7 @@ namespace Cinema_test
             MovieTicket movieTicket1 = new(movieScreening, 1, 2, false);
             Order order = new(1, true);
             order.addSeatReservation(movieTicket1);
-            decimal result = order.calculatePrice();
+            decimal result = order.CalculatePrice();
             Assert.Equal(10, result);
         }
         //1,2,5,7
@@ -37,7 +37,7 @@ namespace Cinema_test
             MovieTicket movieTicket1 = new(movieScreening, 1, 2, true);
             Order order = new(1, true);
             order.addSeatReservation(movieTicket1);
-            decimal result = order.calculatePrice();
+            decimal result = order.CalculatePrice();
             Assert.Equal(12, result);
         }
 
@@ -51,7 +51,7 @@ namespace Cinema_test
             MovieTicket movieTicket1 = new(movieScreening, 1, 2, true);
             Order order = new(1, false);
             order.addSeatReservation(movieTicket1);
-            decimal result = order.calculatePrice();
+            decimal result = order.CalculatePrice();
             Assert.Equal(13, result);
         }
 
@@ -70,7 +70,7 @@ namespace Cinema_test
             order.addSeatReservation(movieTicket1);
             order.addSeatReservation(movieTicket1);
             order.addSeatReservation(movieTicket1);
-            decimal result = order.calculatePrice();
+            decimal result = order.CalculatePrice();
             Assert.Equal(70.2m, result);
         }
 
@@ -86,7 +86,7 @@ namespace Cinema_test
             Order order = new(1, false);
             order.addSeatReservation(movieTicket1);
             order.addSeatReservation(movieTicket2);
-            decimal result = order.calculatePrice();
+            decimal result = order.CalculatePrice();
             Assert.Equal(13, result);
         }
 
@@ -102,7 +102,7 @@ namespace Cinema_test
             Order order = new(1, false);
             order.addSeatReservation(movieTicket1);
             order.addSeatReservation(movieTicket2);
-            decimal result = order.calculatePrice();
+            decimal result = order.CalculatePrice();
             Assert.Equal(10, result);
         }   
 
@@ -116,8 +116,49 @@ namespace Cinema_test
             MovieTicket movieTicket1 = new(movieScreening, 1, 2, false);
             Order order = new(1, false);
             order.addSeatReservation(movieTicket1);
-            decimal result = order.calculatePrice();
+            decimal result = order.CalculatePrice();
             Assert.Equal(10, result);
         }
+
+
+        [Fact]
+        public void exportToPlainText()
+        {
+            DateTime monday = new DateTime(2024, 2, 5);
+            Movie movie = new("The matrix");
+            MovieScreening movieScreening = new(movie, monday, 10);
+            MovieTicket movieTicket1 = new(movieScreening, 1, 2, false);
+            Order order = new(1, false);
+            order.addSeatReservation(movieTicket1);
+
+
+            order.Export(TicketExportFormat.PLAINTEXT);
+
+            StreamReader sr = new StreamReader("C:/dev/Order_1.txt");
+           string result = sr.ReadToEnd();
+
+            Assert.Contains("Order Number: 1", result);
+        }
+
+        [Fact]
+        public void exportToJSON()
+        {
+            DateTime monday = new DateTime(2024, 2, 5);
+            Movie movie = new("The matrix");
+            MovieScreening movieScreening = new(movie, monday, 10);
+            MovieTicket movieTicket1 = new(movieScreening, 1, 2, false);
+            Order order = new(1, false);
+            order.addSeatReservation(movieTicket1);
+
+
+            order.Export(TicketExportFormat.JSON);
+
+            StreamReader sr = new StreamReader("C:/dev/Order_1.json");
+            string result = sr.ReadToEnd();
+
+            Assert.Contains("\"OrderNr\": 1", result);
+        }
+
+
     }
 }
