@@ -1,4 +1,4 @@
-﻿using System.Runtime.ConstrainedExecution;
+﻿using Bioscoop_Deel_1_SOFA.CalculationBehavior;
 
 namespace Bioscoop_Deel_1_SOFA;
 
@@ -9,10 +9,18 @@ public class Order
     private List<MovieTicket> Tickets { get; set; } = new List<MovieTicket>();
 
 
+    private ICalculationBehavior calculationBehavior;
+
+
     public Order(int orderNr, bool isStudentOrder)
     {
         OrderNr = orderNr;
         IsStudentOrder = isStudentOrder;
+
+        if (isStudentOrder)
+        {
+            calculationBehavior = new StudentCalculation();
+        }
     }
 
     public int getOrderNr()
@@ -27,58 +35,19 @@ public class Order
 
     public decimal CalculatePrice()
     {
-        decimal totalPrice = decimal.Zero;
-        bool canHaveDiscount = Tickets.Count >= 6;
-
         DateTime day = Tickets.First().GetMovieScreening().getDateAndTime();
         bool isWeekday = (day.DayOfWeek == DayOfWeek.Monday || day.DayOfWeek == DayOfWeek.Tuesday || day.DayOfWeek == DayOfWeek.Wednesday || day.DayOfWeek == DayOfWeek.Thursday);
                 
-        
-
-
-        for (int i = 0; i < Tickets.Count; i++)
+        if (isWeekday && !IsStudentOrder)
         {
-            MovieTicket ticket = Tickets[i];
-            // A- Is een student
-            if(IsStudentOrder)
-            {
-                //B- Is 2e kaartje
-                if(!((i + 1) % 2 == 0))
-                {
-                    //C - Is een premium kaart
-                    if (ticket.IsPremiumTicket()) totalPrice += 2;
-                    totalPrice += ticket.GetPricePerSeat();
-                } 
-            } 
-            // D- Iedereen behalve student
-            else
-            {
-                // F- Iedereen In het weekend
-                if(!isWeekday)
-                {
-                    //G - is een premium kaart
-                    if (ticket.IsPremiumTicket()) totalPrice += 3;
-                    
-
-                    totalPrice += ticket.GetPricePerSeat();
-                } 
-                // E- Iedereen buiten het weekend
-                else 
-                {
-                    // H- Is 2e kaartje
-                    if (!((i + 1) % 2 == 0))
-                    {
-                        if (ticket.IsPremiumTicket()) totalPrice += 3;
-                        totalPrice += ticket.GetPricePerSeat();
-                    }
-                }
-            }
+            calculationBehavior = new NotStudentWeekdayCalculation();
+        }
+        else if (!IsStudentOrder)
+        {
+            calculationBehavior = new NotStudentWeekendCalculation();
         }
 
-        //H - Groep is groter dan 6
-        if (canHaveDiscount && !isWeekday && !IsStudentOrder) totalPrice *= 0.9m;
-
-        return totalPrice;
+        return calculationBehavior.CalculatePrice(Tickets);
     }
 
 
