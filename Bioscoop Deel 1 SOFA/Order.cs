@@ -1,4 +1,5 @@
 ﻿using Bioscoop_Deel_1_SOFA.CalculationBehavior;
+using Bioscoop_Deel_1_SOFA.ExportBehavior;
 
 namespace Bioscoop_Deel_1_SOFA;
 
@@ -10,17 +11,13 @@ public class Order
 
 
     private ICalculationBehavior calculationBehavior;
-
+    private IExportBehavior exportBehavior;
 
     public Order(int orderNr, bool isStudentOrder)
     {
         OrderNr = orderNr;
         IsStudentOrder = isStudentOrder;
 
-        if (isStudentOrder)
-        {
-            calculationBehavior = new StudentCalculation();
-        }
     }
 
     public int getOrderNr()
@@ -37,12 +34,17 @@ public class Order
     {
         DateTime day = Tickets.First().GetMovieScreening().getDateAndTime();
         bool isWeekday = (day.DayOfWeek == DayOfWeek.Monday || day.DayOfWeek == DayOfWeek.Tuesday || day.DayOfWeek == DayOfWeek.Wednesday || day.DayOfWeek == DayOfWeek.Thursday);
-                
-        if (isWeekday && !IsStudentOrder)
+
+
+        if (IsStudentOrder)
+        {
+            calculationBehavior = new StudentCalculation();
+        }
+        else if (isWeekday)
         {
             calculationBehavior = new NotStudentWeekdayCalculation();
         }
-        else if (!IsStudentOrder)
+        else
         {
             calculationBehavior = new NotStudentWeekendCalculation();
         }
@@ -53,70 +55,16 @@ public class Order
 
     public void Export(TicketExportFormat format)
     {
-        switch (format)
+
+        if (format.Equals(TicketExportFormat.PLAINTEXT))
         {
-            case TicketExportFormat.PLAINTEXT:
-                ExportToPlainText();
-                break;
-            case TicketExportFormat.JSON:
-                ExportToJson();
-                break;
-            default:
-                throw new ArgumentException("Invalid ticket export format.");
+            exportBehavior = new PlainTextExport();
         }
-    }
-
-    private void ExportToPlainText()
-    {
-        string fileName = $"Order_{OrderNr}.txt";
-        Console.WriteLine(fileName);
-
-        //Create the text file
-        File.Create($"C:/dev/{fileName}").Close();
-            
-
-        using (StreamWriter writer = new ($"C:/dev/{fileName}", true))
+        else if (format.Equals(TicketExportFormat.JSON))
         {
-            writer.WriteLine($"Order Number: {OrderNr}");
-            writer.WriteLine($"Is Student Order: {IsStudentOrder}");
-            writer.WriteLine("Tickets:");
-            writer.WriteLine($"Price total: {CalculatePrice()}");
-
-            foreach (MovieTicket ticket in Tickets)
-            {
-                writer.WriteLine($"  Date and Time: {ticket.GetMovieScreening().getDateAndTime()}");
-                writer.WriteLine($"  Seat: Row{ticket.GetRowNr()}, Seat{ticket.GetSeatNr()}");
-                writer.WriteLine();
-            }
-
+            exportBehavior = new JsonExport();
         }
+
+        exportBehavior.Export(OrderNr, CalculatePrice(), IsStudentOrder, Tickets, "C:/dev/");
     }
-
-    private void ExportToJson()
-    {
-
-        string fileName = $"Order_{OrderNr}.json";
-        File.Create($"C:/dev/{fileName}").Close();
-        using (StreamWriter writer = new ($"C:/dev/{fileName}", true))
-        {
-            writer.WriteLine("{");
-            writer.WriteLine($"  \"OrderNr\": {OrderNr},");
-            writer.WriteLine($"  \"Price total\": {CalculatePrice()},");
-            writer.WriteLine($"  \"IsStudentOrder\": {IsStudentOrder.ToString().ToLower()},");
-            writer.WriteLine("  \"Tickets\": [");
-
-            for (int i = 0; i < Tickets.Count; i++)
-            {
-                MovieTicket ticket = Tickets[i];
-                writer.WriteLine("    {");
-                writer.WriteLine($"      \"Date and time\": \"{ticket.GetMovieScreening().getDateAndTime()}\",");
-                writer.WriteLine($"      \"Seat\": \"{ticket.GetSeatNr()}\"");
-                writer.WriteLine("    }" + (i < Tickets.Count - 1 ? "," : ""));
-            }
-
-            writer.WriteLine("  ]");
-            writer.WriteLine("}");
-        }
-    }
-
 }
