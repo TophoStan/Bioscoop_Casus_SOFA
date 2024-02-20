@@ -1,8 +1,6 @@
-﻿using Bioscoop_Deel_1_SOFA.CalculationBehavior;
-using Bioscoop_Deel_1_SOFA.ExportBehavior;
+﻿namespace Bioscoop_Deel_1_SOFA;
 
-namespace Bioscoop_Deel_1_SOFA;
-
+using Bioscoop_Deel_1_SOFA.states;
 using System.Text;
 using System.Text.Json.Nodes;
 
@@ -10,12 +8,18 @@ public class Order
 {
     private int orderNr;
     private bool isStudentOrder;
-    private List<MovieTicket> tickets = new List<MovieTicket>();
+    public List<MovieTicket> tickets = new List<MovieTicket>();
 
+
+    private int ticketCount;
+
+    private IState _State;
+   
     public Order(int orderNr, bool isStudentOrder)
     {
         this.orderNr = orderNr;
         this.isStudentOrder = isStudentOrder;
+        _State = new NonDefinitiveState(this);
     }
 
     public int GetOrderNr()
@@ -34,12 +38,12 @@ public class Order
 
         for (int i = 0; i < tickets.Count; i++)
         {
-            MovieTicket ticket = tickets[i];`
+            MovieTicket ticket = tickets[i];
             DateTime screeningDate = ticket.GetScreeningDate();
 
             bool isWeekend = screeningDate.DayOfWeek == DayOfWeek.Saturday || screeningDate.DayOfWeek == DayOfWeek.Sunday;
 
-            decimal ticketPrice = ticket.GetPrice();
+            decimal ticketPrice = ticket.GetMovieScreening().getPricePerSeat();
 
             // Premium fee for students is ... for non-students is ...
             if (ticket.IsPremiumTicket())
@@ -103,7 +107,7 @@ public class Order
                 {
                     { "screeningDate", ticket.GetScreeningDate() },
                     { "isPremiumTicket", ticket.IsPremiumTicket() },
-                    { "price", ticket.GetPrice() },
+                    { "price", ticket.GetMovieScreening().getPricePerSeat() },
                 };
             jsonTickets.Add(jsonTicket);
         }
@@ -112,4 +116,58 @@ public class Order
         string path = Path.Combine(Path.GetTempPath(), "", $"docentoscoop_order_{this.orderNr}.json");
         File.WriteAllText(path, jsonOrder.ToString());
     }
+
+    //public int GetTicketCount()
+    //{
+    //    return ticketCount;
+    //}
+    
+    //public void SetTicketCount(int count)
+    //{
+    //    ticketCount = count;
+    //}
+
+    public void SetState(IState state)
+    {
+        _State = state;
+    }
+
+    public IState GetState()
+    {
+        return _State;
+    }
+
+
+    public void Cancel()
+    {
+        _State.Cancel();
+    }
+
+    public void Edit()
+    {
+        _State.Edit();
+    }
+
+    public void Pay()
+    {
+        _State.Pay();
+    }
+
+    public void Remind()
+    {
+        _State.Remind();
+    }
+
+    public void SendTickets()
+    {
+        _State.SendTickets();
+    }
+
+    public void Submit()
+    {
+        _State.Submit();
+    }
+
+     
+
 }

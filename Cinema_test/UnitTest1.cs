@@ -11,8 +11,8 @@ namespace Cinema_test
             MovieTicket movieTicket1 = new(movieScreening, 1, 2, false);
             MovieTicket movieTicket2 = new(movieScreening, 1, 2, false);
             Order order = new(1, true);
-            order.addSeatReservation(movieTicket1);
-            order.addSeatReservation(movieTicket2);
+            order.AddSeatReservation(movieTicket1);
+            order.AddSeatReservation(movieTicket2);
             decimal result = order.CalculatePrice();
             Assert.Equal(10, result);
         }
@@ -24,7 +24,7 @@ namespace Cinema_test
             MovieScreening movieScreening = new(movie, DateTime.Now, 10);
             MovieTicket movieTicket1 = new(movieScreening, 1, 2, false);
             Order order = new(1, true);
-            order.addSeatReservation(movieTicket1);
+            order.AddSeatReservation(movieTicket1);
             decimal result = order.CalculatePrice();
             Assert.Equal(10, result);
         }
@@ -36,7 +36,7 @@ namespace Cinema_test
             MovieScreening movieScreening = new(movie, DateTime.Now, 10);
             MovieTicket movieTicket1 = new(movieScreening, 1, 2, true);
             Order order = new(1, true);
-            order.addSeatReservation(movieTicket1);
+            order.AddSeatReservation(movieTicket1);
             decimal result = order.CalculatePrice();
             Assert.Equal(12, result);
         }
@@ -50,7 +50,7 @@ namespace Cinema_test
             MovieScreening movieScreening = new(movie, monday, 10);
             MovieTicket movieTicket1 = new(movieScreening, 1, 2, true);
             Order order = new(1, false);
-            order.addSeatReservation(movieTicket1);
+            order.AddSeatReservation(movieTicket1);
             decimal result = order.CalculatePrice();
             Assert.Equal(13, result);
         }
@@ -64,12 +64,12 @@ namespace Cinema_test
             MovieScreening movieScreening = new(movie, sunday, 10);
             MovieTicket movieTicket1 = new(movieScreening, 1, 2, true);
             Order order = new(1, false);
-            order.addSeatReservation(movieTicket1);
-            order.addSeatReservation(movieTicket1);
-            order.addSeatReservation(movieTicket1);
-            order.addSeatReservation(movieTicket1);
-            order.addSeatReservation(movieTicket1);
-            order.addSeatReservation(movieTicket1);
+            order.AddSeatReservation(movieTicket1);
+            order.AddSeatReservation(movieTicket1);
+            order.AddSeatReservation(movieTicket1);
+            order.AddSeatReservation(movieTicket1);
+            order.AddSeatReservation(movieTicket1);
+            order.AddSeatReservation(movieTicket1);
             decimal result = order.CalculatePrice();
             Assert.Equal(70.2m, result);
         }
@@ -84,8 +84,8 @@ namespace Cinema_test
             MovieTicket movieTicket1 = new(movieScreening, 1, 2, true);
             MovieTicket movieTicket2 = new(movieScreening, 1, 2, true);
             Order order = new(1, false);
-            order.addSeatReservation(movieTicket1);
-            order.addSeatReservation(movieTicket2);
+            order.AddSeatReservation(movieTicket1);
+            order.AddSeatReservation(movieTicket2);
             decimal result = order.CalculatePrice();
             Assert.Equal(13, result);
         }
@@ -100,8 +100,8 @@ namespace Cinema_test
             MovieTicket movieTicket1 = new(movieScreening, 1, 2, false);
             MovieTicket movieTicket2 = new(movieScreening, 1, 2, false);
             Order order = new(1, false);
-            order.addSeatReservation(movieTicket1);
-            order.addSeatReservation(movieTicket2);
+            order.AddSeatReservation(movieTicket1);
+            order.AddSeatReservation(movieTicket2);
             decimal result = order.CalculatePrice();
             Assert.Equal(10, result);
         }   
@@ -115,7 +115,7 @@ namespace Cinema_test
             MovieScreening movieScreening = new(movie, monday, 10);
             MovieTicket movieTicket1 = new(movieScreening, 1, 2, false);
             Order order = new(1, false);
-            order.addSeatReservation(movieTicket1);
+            order.AddSeatReservation(movieTicket1);
             decimal result = order.CalculatePrice();
             Assert.Equal(10, result);
         }
@@ -129,7 +129,7 @@ namespace Cinema_test
             MovieScreening movieScreening = new(movie, monday, 10);
             MovieTicket movieTicket1 = new(movieScreening, 1, 2, false);
             Order order = new(1, false);
-            order.addSeatReservation(movieTicket1);
+            order.AddSeatReservation(movieTicket1);
 
 
             order.Export(TicketExportFormat.PLAINTEXT);
@@ -148,7 +148,7 @@ namespace Cinema_test
             MovieScreening movieScreening = new(movie, monday, 10);
             MovieTicket movieTicket1 = new(movieScreening, 1, 2, false);
             Order order = new(1, false);
-            order.addSeatReservation(movieTicket1);
+            order.AddSeatReservation(movieTicket1);
 
 
             order.Export(TicketExportFormat.JSON);
@@ -159,13 +159,6 @@ namespace Cinema_test
             Assert.Contains("\"OrderNr\": 1", result);
         }
 
-        [Fact]
-        public void getTitleFromMovie()
-        {
-            Movie movie = new("The matrix");
-
-            Assert.Equal("The matrix", movie.getTitle());
-        }
         [Fact]
         public void toStringFromMovie()
         {

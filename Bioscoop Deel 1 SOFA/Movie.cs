@@ -3,21 +3,21 @@ namespace Bioscoop_Deel_1_SOFA;
 
 public class Movie
 {
-    private string Title { get; set; } = string.Empty;
+    private string title;
+    private List<MovieScreening> screenings = new List<MovieScreening>();
 
     public Movie(string title)
     {
-        Title = title;
+        this.title = title;
     }
 
-    public string getTitle()
+    public void addScreening(MovieScreening screening)
     {
-        return Title;
+        screenings.Add(screening);
     }
 
-
-    public override string ToString()
+    public string toString()
     {
-        return "Titlename: " + Title;
+        return title;
     }
 }

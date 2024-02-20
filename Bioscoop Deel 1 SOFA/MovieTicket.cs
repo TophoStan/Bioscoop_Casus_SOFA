@@ -34,7 +34,7 @@ public class MovieTicket
 
     public DateTime GetScreeningDate()
     {
-        return movieScreening.getDate();
+        return Screening.getDateAndTime();
     }
 
     public decimal GetPricePerSeat()
