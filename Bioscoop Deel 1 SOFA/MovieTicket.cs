@@ -32,6 +32,11 @@ public class MovieTicket
         return IsPremium;
     }
 
+    public DateTime GetScreeningDate()
+    {
+        return movieScreening.getDate();
+    }
+
     public decimal GetPricePerSeat()
     {
         return Screening.getPricePerSeat() ;
