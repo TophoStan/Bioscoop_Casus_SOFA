@@ -10,20 +10,24 @@ public class ReservedState : IState
 {
 
     private Order _Order;
-    public ReservedState(Order order)
+    private Publisher _Publisher;
+
+    public ReservedState(Order order, Publisher publisher)
     {
         _Order = order;
+        _Publisher = publisher;
         //If 12 hours before screening date,
         if (order.tickets[0].GetScreeningDate() < DateTime.Now.AddHours(24))
         {
-            _Order.SetState(new ProvisionalState(_Order));
+            _Order.SetState(new ProvisionalState(_Order, _Publisher));
         }
     }
 
     public void Cancel()
     {
-        Console.WriteLine("Order Canceled");
-        _Order.SetState(new NonDefinitiveState(_Order));
+        string message = "Order cancelled";
+        _Publisher.Notify(message);
+        _Order.SetState(new NonDefinitiveState(_Order, _Publisher));
     }
 
     public void Edit()
@@ -33,8 +37,7 @@ public class ReservedState : IState
 
     public void Pay()
     {
-        Console.WriteLine("Order is payed");
-        _Order.SetState(new PayedState(_Order));
+        _Order.SetState(new PayedState(_Order, _Publisher));
     }
 
     public void Remind()

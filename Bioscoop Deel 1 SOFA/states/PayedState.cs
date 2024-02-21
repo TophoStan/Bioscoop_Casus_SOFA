@@ -9,9 +9,15 @@ namespace Bioscoop_Deel_1_SOFA.states;
 public class PayedState : IState
 {
     private Order _Order;
-    public PayedState(Order order)
+    private Publisher _Publisher;
+
+    public PayedState(Order order, Publisher publisher)
     {
         _Order = order;
+        _Publisher = publisher;
+
+        string message = "Order payed";
+        _Publisher.Notify(message);
     }
 
     public void Cancel()
@@ -37,7 +43,8 @@ public class PayedState : IState
     public void SendTickets()
     {
         //Cool
-        Console.WriteLine("Tickets are sent");
+        string message = "Tickets are sent";
+        _Publisher.Notify(message);
     }
 
     public void Submit()

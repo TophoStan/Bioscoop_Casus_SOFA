@@ -9,22 +9,27 @@ namespace Bioscoop_Deel_1_SOFA.states;
 public class ProvisionalState : IState
 {
     private Order _Order;
-    public ProvisionalState(Order order)
+    private Publisher _Publisher;
+
+    public ProvisionalState(Order order, Publisher publisher)
     {
         _Order = order;
+        _Publisher = publisher;
         Remind();
 
         if (order.tickets[0].GetScreeningDate() < DateTime.Now.AddHours(12))
         {
-            Console.WriteLine("Order has not been payed");
+            string message = "Payment deadline has been passed";
+            _Publisher.Notify(message);
             Cancel();
         }
     }
 
     public void Cancel()
     {
-        Console.WriteLine("Order Canceled");
-        _Order.SetState(new NonDefinitiveState(_Order));
+        string message = "Order has been cancelled";
+        _Publisher.Notify(message);
+        _Order.SetState(new NonDefinitiveState(_Order, _Publisher));
     }
 
     public void Edit()
@@ -35,12 +40,13 @@ public class ProvisionalState : IState
 
     public void Pay()
     {
-        _Order.SetState(new PayedState(_Order));
+        _Order.SetState(new PayedState(_Order, _Publisher));
     }
 
     public void Remind()
     {
-        Console.WriteLine("REMINDER: Order is not yet payed");
+        string message = "REMINDER: Order is not yet payed";
+        _Publisher.Notify(message);
     }
 
     public void SendTickets()

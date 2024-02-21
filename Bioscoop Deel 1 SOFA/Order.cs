@@ -1,6 +1,7 @@
 ﻿namespace Bioscoop_Deel_1_SOFA;
 
 using Bioscoop_Deel_1_SOFA.states;
+using Bioscoop_Deel_1_SOFA.subscribers;
 using System.Text;
 using System.Text.Json.Nodes;
 
@@ -14,12 +15,17 @@ public class Order
     private int ticketCount;
 
     private IState _State;
+    private Publisher _Publisher = new();
    
     public Order(int orderNr, bool isStudentOrder)
     {
         this.orderNr = orderNr;
         this.isStudentOrder = isStudentOrder;
-        _State = new NonDefinitiveState(this);
+
+        _Publisher.Subscribe(new WhatsappSubscriber());
+
+        _State = new NonDefinitiveState(this, _Publisher);
+
     }
 
     public int GetOrderNr()
@@ -167,7 +173,4 @@ public class Order
     {
         _State.Submit();
     }
-
-     
-
 }

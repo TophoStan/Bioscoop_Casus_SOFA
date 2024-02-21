@@ -10,16 +10,19 @@ public class NonDefinitiveState : IState
 {
 
     private Order _Order;
+    private Publisher _Publisher;
 
-    public NonDefinitiveState(Order order)
+    public NonDefinitiveState(Order order, Publisher publisher)
     {
         _Order = order;
+        _Publisher = publisher;
     }
 
     public void Cancel()
     {
         //Cancel
-        Console.WriteLine("Order cancelled");
+        string message = "Order cancelled";
+        _Publisher.Notify(message);
     }
 
     public void Edit()
@@ -44,7 +47,6 @@ public class NonDefinitiveState : IState
 
     public void Submit()
     {
-        Console.WriteLine("Order submitted");
-        _Order.SetState(new ReservedState(_Order));
+        _Order.SetState(new ReservedState(_Order, _Publisher));
     }
 }

@@ -5,7 +5,7 @@ Movie movie = new Movie("The Matrix");
 Movie otherMovie = new Movie("John Wick");
 
 // Create a non-weekend movie screening
-DateTime wednesdayDateTime = new DateTime(2024, 2, 20, 19, 0, 0); // January 31, 2024 is a Wednesday
+DateTime wednesdayDateTime = new DateTime(2024, 2, 28, 19, 0, 0); // January 31, 2024 is a Wednesday
 MovieScreening movieScreening = new MovieScreening(movie, wednesdayDateTime, 10.0M);
 
 // Create a weekend movie screening
